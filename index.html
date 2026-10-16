@@ -62,50 +62,8 @@
   .who h1 { margin: 0; font-size: 1.1rem; font-weight: 700; letter-spacing: .01em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .who p  { margin: .15rem 0 0; font-size: .8rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
-  /* animated download button */
-  .dl {
-    position: relative; overflow: hidden; flex-shrink: 0;
-    display: inline-flex; align-items: center; gap: .6rem;
-    padding: .75rem 1.4rem; border-radius: 999px;
-    font: 600 .95rem/1 "Sora", system-ui, sans-serif; color: #fff; text-decoration: none;
-    background: linear-gradient(120deg, var(--blue), var(--sky));
-    box-shadow: 0 6px 22px rgba(27,109,255,.45);
-    transition: transform .2s ease, box-shadow .2s ease;
-    animation: pulse 2.6s ease-out infinite;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .dl:hover { transform: translateY(-2px) scale(1.04); box-shadow: 0 10px 30px rgba(46,196,241,.55); }
-  .dl:active { transform: scale(.96); }
-  .dl:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
-  /* light sweep */
-  .dl::after {
-    content: ""; position: absolute; top: 0; left: -70%; width: 40%; height: 100%;
-    background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
-    transform: skewX(-20deg); animation: sweep 3.4s ease-in-out infinite;
-  }
-  @keyframes sweep { 0%, 55% { left: -70%; } 100% { left: 140%; } }
-  @keyframes pulse {
-    0%   { box-shadow: 0 6px 22px rgba(27,109,255,.45), 0 0 0 0 rgba(46,196,241,.55); }
-    70%  { box-shadow: 0 6px 22px rgba(27,109,255,.45), 0 0 0 16px rgba(46,196,241,0); }
-    100% { box-shadow: 0 6px 22px rgba(27,109,255,.45), 0 0 0 0 rgba(46,196,241,0); }
-  }
-  .dl svg { width: 1.25em; height: 1.25em; flex-shrink: 0; }
-  .dl .arrow { animation: bob 1.5s ease-in-out infinite; }
-  @keyframes bob { 0%, 100% { transform: translateY(-2px); } 50% { transform: translateY(2.5px); } }
-  .dl .ic-done, .dl .txt-done { display: none; }
-  /* progress fill on click */
-  .dl .fill { position: absolute; inset: 0; width: 0; background: rgba(255,255,255,.28); }
-  .dl.busy .fill { animation: fill .9s ease-out forwards; }
-  @keyframes fill { to { width: 100%; } }
-  .dl.done { background: linear-gradient(120deg, #0fa97a, var(--mint)); animation: none; box-shadow: 0 8px 26px rgba(31,207,154,.5); }
-  .dl.done::after { display: none; }
-  .dl.done .ic-dl, .dl.done .txt-dl { display: none; }
-  .dl.done .ic-done { display: block; animation: pop .35s ease-out; }
-  .dl.done .txt-done { display: inline; }
-  @keyframes pop { from { transform: scale(.3); opacity: 0; } }
-
   /* CV pages */
-  main { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; padding: 1.75rem .75rem 3rem; }
+  main { display: flex; flex-direction: column; align-items: center; gap: 1.5rem; padding: 1.75rem .75rem 6.5rem; }
   .page {
     position: relative; background: #fff; line-height: 0;
     border-radius: .35rem; overflow: hidden;
@@ -123,50 +81,51 @@
              border: 3px solid rgba(255,255,255,.15); border-top-color: var(--sky); animation: spin .9s linear infinite; }
   @keyframes spin { to { transform: rotate(360deg); } }
 
-  /* footer */
+  /* footer: slim floating bar, fixed at the bottom */
   footer {
-    padding: 2rem 1rem calc(2rem + env(safe-area-inset-bottom, 0px));
-    text-align: center;
-    border-top: 1px solid rgba(255,255,255,.08);
-    background: rgba(11, 22, 38, .55);
+    position: fixed; left: 50%; bottom: calc(.9rem + env(safe-area-inset-bottom, 0px)); z-index: 30;
+    transform: translateX(-50%);
+    display: flex; align-items: center; gap: 1.3rem;
+    width: max-content; max-width: calc(100vw - 1.5rem);
+    padding: .4rem .45rem .4rem 1.3rem; border-radius: 999px;
+    background: rgba(11, 22, 38, .82);
+    -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,.14);
+    box-shadow: 0 14px 40px rgba(0,0,0,.5);
+    animation: dockIn .8s .5s cubic-bezier(.2,.8,.2,1) both;
   }
-  footer .f-name { margin: 0; font-weight: 600; font-size: 1rem; }
-  footer .f-role { margin: .25rem 0 0; font-size: .85rem; color: var(--muted); }
-  footer nav { display: flex; flex-wrap: wrap; justify-content: center; gap: .8rem; margin: 1.4rem 0 1.5rem; }
+  @keyframes dockIn { from { opacity: 0; transform: translate(-50%, 150%); } }
+  .f-id { line-height: 1.3; min-width: 0; }
+  .f-name { margin: 0; font-weight: 600; font-size: .85rem; white-space: nowrap; }
+  .f-role { margin: 0; font-size: .7rem; color: var(--muted); white-space: nowrap; }
+  footer nav { display: flex; gap: .4rem; margin: 0; }
   footer nav a {
-    display: inline-flex; align-items: center; gap: .7rem;
-    padding: .45rem 1.3rem .45rem .45rem; border-radius: 999px;
-    color: var(--text); text-decoration: none; font-size: .92rem; font-weight: 600;
-    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.14);
-    transition: transform .2s ease, background .2s ease, border-color .2s ease, box-shadow .2s ease;
+    display: inline-flex; align-items: center; gap: .5rem;
+    padding: .3rem .95rem .3rem .3rem; border-radius: 999px;
+    color: var(--text); text-decoration: none; font-size: .82rem; font-weight: 600; white-space: nowrap;
+    background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12);
+    transition: transform .2s ease, background .2s ease, border-color .2s ease;
   }
   footer nav a .ico {
-    width: 2.3rem; height: 2.3rem; border-radius: 50%; flex-shrink: 0;
+    width: 1.9rem; height: 1.9rem; border-radius: 50%; flex-shrink: 0;
     display: grid; place-items: center; color: #fff;
     background: linear-gradient(135deg, var(--blue), var(--sky));
-    box-shadow: 0 4px 12px rgba(0,0,0,.3);
     transition: transform .25s ease;
   }
-  footer nav a .ico svg { width: 1.15rem; height: 1.15rem; }
+  footer nav a .ico svg { width: 1rem; height: 1rem; }
   footer nav a.li .ico { background: #0a66c2; }
   footer nav a.cv .ico { background: linear-gradient(135deg, #0fa97a, var(--mint)); }
-  footer nav a:hover {
-    transform: translateY(-3px); background: rgba(255,255,255,.12);
-    border-color: rgba(255,255,255,.32); box-shadow: 0 12px 28px rgba(0,0,0,.4);
-  }
+  footer nav a:hover { transform: translateY(-2px); background: rgba(255,255,255,.14); border-color: rgba(255,255,255,.3); }
   footer nav a:hover .ico { transform: rotate(-8deg) scale(1.12); }
-  footer nav a:active { transform: translateY(-1px) scale(.98); }
-  footer nav a:focus-visible { outline: 3px solid #fff; outline-offset: 4px; }
-  @media (max-width: 560px) {
-    footer nav a { width: min(100%, 18rem); }
-  }
-  footer .f-copy { margin: 0; font-size: .75rem; color: var(--muted); }
+  footer nav a:active { transform: scale(.96); }
+  footer nav a:focus-visible { outline: 3px solid #fff; outline-offset: 3px; }
+  @media (max-width: 760px) { .f-id { display: none; } footer { padding: .4rem .45rem; } }
+  @media (max-width: 440px) { footer nav a { padding: .3rem; } footer nav a .lbl { display: none; } }
 
   /* phones */
   @media (max-width: 560px) {
     .who h1 { font-size: .95rem; }
     .who p { font-size: .72rem; }
-    .dl { padding: .7rem 1.05rem; font-size: .85rem; }
     main { padding-top: 1.1rem; gap: 1rem; }
   }
 
@@ -183,16 +142,6 @@
     <h1>Dheeraj Bidkar</h1>
     <p>Senior Salesforce Developer</p>
   </div>
-  <a id="dl" class="dl" href="Dheeraj_Bidkar_CV.pdf" download="Dheeraj_Bidkar_CV.pdf">
-    <span class="fill"></span>
-    <svg class="ic-dl" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <g class="arrow"><path d="M12 3v11"/><path d="m7 10 5 5 5-5"/></g>
-      <path d="M4 20h16"/>
-    </svg>
-    <svg class="ic-done" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>
-    <span class="txt-dl">Download CV</span>
-    <span class="txt-done">Downloaded</span>
-  </a>
 </header>
 
 <main id="viewer">
@@ -200,36 +149,28 @@
 </main>
 
 <footer>
-  <p class="f-name">Dheeraj Bidkar</p>
-  <p class="f-role">Senior Salesforce Developer, Indore, India</p>
+  <div class="f-id">
+    <p class="f-name">Dheeraj Bidkar</p>
+    <p class="f-role">Senior Salesforce Developer, Indore</p>
+  </div>
   <nav aria-label="Contact">
-    <a class="em" href="mailto:dheerajbidkar.sfdc@gmail.com">
+    <a class="em" href="mailto:dheerajbidkar.sfdc@gmail.com" aria-label="Email">
       <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7.5 8 6 8-6"/></svg></span>
-      Email
+      <span class="lbl">Email</span>
     </a>
-    <a class="li" href="https://www.linkedin.com/in/dheeraj-b-860573175/" target="_blank" rel="noopener">
+    <a class="li" href="https://www.linkedin.com/in/dheeraj-b-860573175/" target="_blank" rel="noopener" aria-label="LinkedIn">
       <span class="ico"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9.5h4V21H3zM9.5 9.5h3.8v1.6h.06c.53-1 1.84-2 3.8-2 4.06 0 4.8 2.67 4.8 6.14V21h-4v-5.1c0-1.22-.02-2.78-1.7-2.78-1.7 0-1.96 1.33-1.96 2.69V21h-4z"/></svg></span>
-      LinkedIn
+      <span class="lbl">LinkedIn</span>
     </a>
-    <a class="cv" href="Dheeraj_Bidkar_CV.pdf" download="Dheeraj_Bidkar_CV.pdf">
+    <a class="cv" href="Dheeraj_Bidkar_CV.pdf" download="Dheeraj_Bidkar_CV.pdf" aria-label="Download CV">
       <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5v11"/><path d="m7.5 10.5 4.5 4.5 4.5-4.5"/><path d="M4.5 20h15"/></svg></span>
-      Download CV
+      <span class="lbl">Download CV</span>
     </a>
   </nav>
-  <p class="f-copy">&copy; <span id="yr">2026</span> Dheeraj Bidkar. All rights reserved.</p>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-  // ---- download button feedback ----
-  const dl = document.getElementById("dl");
-  dl.addEventListener("click", () => {
-    dl.classList.remove("done");
-    dl.classList.add("busy");
-    setTimeout(() => { dl.classList.remove("busy"); dl.classList.add("done"); }, 900);
-    setTimeout(() => dl.classList.remove("done"), 3800);
-  });
-
   // ---- CV rendering ----
   const PDF_URL = "Dheeraj_Bidkar_CV.pdf";
   const viewer = document.getElementById("viewer");
@@ -308,7 +249,6 @@
     }, 250);
   });
 
-  document.getElementById("yr").textContent = new Date().getFullYear();
   init();
 </script>
 </body>
