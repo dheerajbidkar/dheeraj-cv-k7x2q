@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dheeraj Bidkar – CV</title>
+<style>
+  :root { --bg:#eef0f3; --bar:#ffffff; --text:#1f2937; --accent:#2563eb; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg:#1b1d21; --bar:#26292e; --text:#e5e7eb; --accent:#3b82f6; }
+  }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text);
+         font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  header { position:sticky; top:0; z-index:10; background:var(--bar);
+           display:flex; align-items:center; justify-content:space-between;
+           padding:10px 20px; box-shadow:0 1px 6px rgba(0,0,0,.15); }
+  header h1 { font-size:1rem; margin:0; font-weight:600; }
+  .btn { background:var(--accent); color:#fff; text-decoration:none; padding:8px 18px;
+         border-radius:8px; font-weight:600; font-size:.9rem; }
+  .btn:hover { opacity:.9; }
+  #viewer { display:flex; flex-direction:column; align-items:center; gap:16px; padding:20px 10px 40px; }
+  canvas { max-width:100%; height:auto; background:#fff; box-shadow:0 2px 12px rgba(0,0,0,.25); }
+  #status { padding:30px; text-align:center; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Dheeraj Bidkar – Senior Salesforce Developer</h1>
+  <a class="btn" href="Dheeraj_Bidkar_CV.pdf" download="Dheeraj_Bidkar_CV.pdf">⬇ Download CV</a>
+</header>
+
+<div id="viewer"><div id="status">Loading CV…</div></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+  const PDF_URL = "Dheeraj_Bidkar_CV.pdf";
+  const viewer = document.getElementById("viewer");
+  const status = document.getElementById("status");
+
+  async function render() {
+    try {
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+        "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+      const pdf = await pdfjsLib.getDocument(PDF_URL).promise;
+      status.remove();
+      const ratio = window.devicePixelRatio || 1;
+      for (let n = 1; n <= pdf.numPages; n++) {
+        const page = await pdf.getPage(n);
+        const base = page.getViewport({ scale: 1 });
+        const width = Math.min(900, window.innerWidth - 20);
+        const scale = (width / base.width) * ratio;
+        const vp = page.getViewport({ scale });
+        const canvas = document.createElement("canvas");
+        canvas.width = vp.width;
+        canvas.height = vp.height;
+        canvas.style.width = (vp.width / ratio) + "px";
+        viewer.appendChild(canvas);
+        await page.render({ canvasContext: canvas.getContext("2d"), viewport: vp }).promise;
+      }
+    } catch (e) {
+      status.innerHTML = 'CV load nahi ho paya. <a href="' + PDF_URL + '">Yahan click karke open karein</a>.';
+    }
+  }
+  render();
+</script>
+</body>
+</html>
